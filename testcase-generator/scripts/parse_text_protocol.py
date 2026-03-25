@@ -35,7 +35,7 @@ from dataclasses import dataclass, field
 class TestCase:
     """测试用例数据结构"""
     # 从标题提取
-    priority: str  # P1-P5
+    priority: str  # P0-P3
     is_negative: bool  # 是否反向用例
     title: str  # 用例标题
 
@@ -67,7 +67,7 @@ class TextProtocolParser:
     """文本协议解析器（v0.2）"""
 
     # 正则表达式
-    TITLE_PATTERN = re.compile(r'^##\s*(\[P[1-5]\])(\[反向\])?\s*(.+)$')
+    TITLE_PATTERN = re.compile(r'^##\s*(\[P[0-3]\])(\[反向\])?\s*(.+)$')
     FIELD_PATTERN = re.compile(r'^\[([^\]]+)\]\s*(.*)$')
 
     # 步骤分隔符（支持多种格式）
@@ -223,7 +223,7 @@ class TextProtocolParser:
         match = self.TITLE_PATTERN.match(title_line)
         if not match:
             raise ParseError(
-                f"用例标题格式错误，应为 '## [P1..P5][反向可选] 标题'，实际: {title_line}",
+                f"用例标题格式错误，应为 '## [P0..P3][反向可选] 标题'，实际: {title_line}",
                 line_num
             )
 

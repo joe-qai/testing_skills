@@ -32,13 +32,13 @@ from parse_text_protocol import parse_test_cases, TestCase
 # Excel 列配置（严格遵循 测试用例导入规范.md）
 EXCEL_COLUMNS = [
     # 必填字段
-    {"field": "优先级", "width": 8, "center": True},
+    {"field": "测试类型", "width": 12, "center": True},    
     {"field": "用例标题", "width": 40},
+    {"field": "前置条件", "width": 25},
     {"field": "操作步骤", "width": 50, "wrap": True},
     {"field": "预期结果", "width": 40, "wrap": True},
-    {"field": "测试类型", "width": 12, "center": True},
+    {"field": "优先级", "width": 8, "center": True},
     # 可选字段
-    {"field": "前置条件", "width": 25},
     {"field": "是否反向用例", "width": 12, "center": True},
     {"field": "一级分组", "width": 18},
     {"field": "二级分组", "width": 18},
@@ -124,13 +124,13 @@ def case_to_row(case: TestCase, item: str = "", point: str = "") -> Dict:
 
     return {
         # 必填字段
-        "优先级": case.priority,
+        "测试类型": case.test_type,
         "用例标题": case.title,
+        "前置条件": case.precondition,
         "操作步骤": steps_str,
         "预期结果": expected_str,
-        "测试类型": case.test_type,
+        "优先级": case.priority,
         # 可选字段
-        "前置条件": case.precondition,
         "是否反向用例": "是" if case.is_negative else "否",
         "一级分组": item,
         "二级分组": point,
