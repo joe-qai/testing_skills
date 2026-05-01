@@ -21,13 +21,14 @@
 - v0.2 使用中文字段标签和 String 格式步骤
 - 支持 `[测试类型]` `[前置条件]` `[测试步骤]` `[预期结果]` `[备注]`
 - 反向用例仅在标题中使用 `[反向]` 标记，不需要单独字段
-- 步骤格式：`1. xxx。2. xxx` 或 `1. xxx；2. xxx` 等
+- 步骤格式：`1. xxx。2. xxx` 或 `1. xxx；2. xxx` 或 `1. xxx\n2. xxx`
 - 字段之间不要空行，保持紧凑格式
+- v0.2 改进：测试类型配置化，步骤解析更稳健，添加 to_full_text() 方法
 """
 
 import re
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Set
 from dataclasses import dataclass, field
 
 
@@ -54,6 +55,17 @@ class TestCase:
     raw_steps: str = ""  # 原始步骤字符串
     raw_expected: str = ""  # 原始预期结果字符串
 
+    def to_full_text(self) -> str:
+        """将用例转换为完整文本（用于相似度计算）"""
+        parts = [self.title, self.test_type]
+        if self.precondition:
+            parts.append(self.precondition)
+        parts.extend(self.steps)
+        parts.extend(self.expected)
+        if self.note:
+            parts.append(self.note)
+        return " ".join(parts)
+
 
 class ParseError(Exception):
     """解析错误"""
@@ -70,25 +82,25 @@ class TextProtocolParser:
     TITLE_PATTERN = re.compile(r'^##\s*(\[P[0-3]\])(\[反向\])?\s*(.+)$')
     FIELD_PATTERN = re.compile(r'^\[([^\]]+)\]\s*(.*)$')
 
-    # 步骤分隔符（支持多种格式）
-    STEP_SEPARATORS = ['。', '；', '，', '\n']
-
-    # 有效的测试类型
-    VALID_TEST_TYPES = [
+    # 改进：使用配置类管理测试类型，支持动态扩展
+    _default_test_types: Set[str] = {
         "功能", "兼容性", "易用性", "性能", "稳定性",
         "安全性", "可靠性", "效果（AI类、资源类）",
         "效果（硬件器件类）", "可维护性", "可移植性", "埋点"
-    ]
+    }
 
-    def __init__(self, strict: bool = True):
+    def __init__(self, strict: bool = True, valid_test_types: Optional[Set[str]] = None):
         """
         初始化解析器
 
         Args:
             strict: 是否严格模式（严格模式下会对所有错误抛出异常）
+            valid_test_types: 有效的测试类型集合，None 时使用默认值
         """
         self.strict = strict
         self.errors: List[ParseError] = []
+        # 改进：支持动态配置测试类型
+        self.VALID_TEST_TYPES = valid_test_types or self._default_test_types.copy()
 
     def parse_file(self, file_path: Path) -> List[TestCase]:
         """
@@ -237,76 +249,59 @@ class TextProtocolParser:
         """
         解析步骤字符串
 
-        支持格式：
-        - 1. xxx。2. xxx
-        - 1. xxx；2. xxx
-        - 1. xxx\n2. xxx
+        支持格式（按优先级）：
+        1. 1. xxx\n2. xxx（换行分隔，最清晰）
+        2. 1. xxx。2. xxx（句号分隔）
+        3. 1. xxx；2. xxx（分号分隔）
+        4. 不连续编号：1. xxx。3. xxx（预期结果中常见）
 
         Args:
             steps_str: 步骤字符串
             line_num: 行号
 
         Returns:
-            步骤列表
+            步骤列表（保持原始编号顺序，允许不连续）
         """
         if not steps_str:
             return []
 
-        # 先尝试按换行分割
+        # 改进：优先尝试按换行分割（最清晰的格式）
         if '\n' in steps_str:
-            lines = steps_str.strip().split('\n')
+            lines = [l.strip() for l in steps_str.strip().split('\n') if l.strip()]
             steps = []
             for line in lines:
-                m = re.match(r'(\d+)\.\s*(.+)', line.strip())
+                m = re.match(r'^(\d+)\.\s*(.+)', line)
                 if m:
-                    num = int(m.group(1))
-                    if num != len(steps) + 1:
-                        raise ParseError(f"步骤编号不连续，期望 {len(steps) + 1}，实际 {num}", line_num)
                     steps.append(m.group(2).strip())
             if steps:
                 return steps
 
-        # 使用更精确的正则：步骤编号必须在开头或分隔符后
-        # 匹配模式：开头或分隔符后的 "数字. "
-        # 关键：步骤编号前面必须是开头、分隔符（。；，）或空格，而不是其他字符
-        
-        steps = []
-        # 使用 findall 找到所有步骤
-        # 模式：(^|[。；，\s])(\d+)\.\s*([^。；，]+(?:[。；，]|$))
-        # 更简单的方法：按步骤编号分割，但要确保编号在正确位置
-        
-        # 先找到所有步骤编号的位置
-        # 步骤编号特征：在开头或分隔符后，后面跟 ". "
+        # 改进：使用更精确的正则匹配步骤编号
+        # 步骤编号特征：在开头或分隔符（。；，）后，后面跟 ". "
+        # 关键改进：使用非捕获组，避免误匹配内容中的数字
         pattern = r'(?:^|[。；，])\s*(\d+)\.\s*'
-        
-        # 找到所有匹配
+
         matches = list(re.finditer(pattern, steps_str))
-        
+
         if not matches:
-            # 尝试简单格式：只有一个步骤，没有编号
-            # 或者格式不标准，返回整个字符串作为一个步骤
-            raise ParseError(f"无法解析步骤格式: {steps_str[:50]}...", line_num)
-        
+            # 无法解析为标准格式，返回整个字符串作为一个步骤
+            # 改进：不抛异常，而是宽容处理
+            return [steps_str.strip()] if steps_str.strip() else []
+
+        steps = []
         for idx, match in enumerate(matches):
-            num = int(match.group(1))
-            if num != len(steps) + 1:
-                raise ParseError(f"步骤编号不连续，期望 {len(steps) + 1}，实际 {num}", line_num)
-            
-            # 获取步骤内容：从当前匹配结束到下一个匹配开始（或字符串结束）
+            # 获取步骤内容：从当前匹配结束到下一个匹配开始
             start = match.end()
             if idx + 1 < len(matches):
                 end = matches[idx + 1].start()
             else:
                 end = len(steps_str)
-            
+
             content = steps_str[start:end].strip().rstrip('。；，')
             if content:
                 steps.append(content)
 
-        if not steps:
-            raise ParseError(f"无法解析步骤格式: {steps_str[:50]}...", line_num)
-
-        return steps
+        return steps if steps else [steps_str.strip()]
 
     def _build_case(self, priority: str, is_negative: bool, title: str,
                     fields: Dict[str, str], line_num: int, raw_title: str) -> TestCase:
@@ -331,10 +326,7 @@ class TextProtocolParser:
         steps = self._parse_steps(raw_steps, line_num)
         expected = self._parse_steps(raw_expected, line_num)
 
-        # 反向用例标记：优先从标题提取，其次从字段
-        if '反向用例' in fields:
-            is_negative = fields['反向用例'] in ['是', '是']
-
+        # 改进：删除冗余的反向用例字段检查（标题已包含标记）
         # 构建用例
         case = TestCase(
             priority=priority,
@@ -374,30 +366,25 @@ class TextProtocolParser:
         # 验证测试类型
         if case.test_type not in self.VALID_TEST_TYPES:
             raise ParseError(
-                f"无效的测试类型: {case.test_type}，必须是以下之一: {', '.join(self.VALID_TEST_TYPES)}",
-                line_num
-            )
-
-        # 验证步骤和预期结果数量一致
-        if len(case.steps) != len(case.expected):
-            raise ParseError(
-                f"测试步骤数量({len(case.steps)})与预期结果数量({len(case.expected)})不一致",
+                f"无效的测试类型: {case.test_type}，必须是以下之一: {', '.join(sorted(self.VALID_TEST_TYPES))}",
                 line_num
             )
 
 
-def parse_test_cases(file_path: Path, strict: bool = True) -> List[TestCase]:
+def parse_test_cases(file_path: Path, strict: bool = True,
+                     valid_test_types: Optional[Set[str]] = None) -> List[TestCase]:
     """
     便捷函数：解析测试用例文件
 
     Args:
         file_path: 文件路径
         strict: 是否严格模式
+        valid_test_types: 有效的测试类型集合
 
     Returns:
         测试用例列表
     """
-    parser = TextProtocolParser(strict=strict)
+    parser = TextProtocolParser(strict=strict, valid_test_types=valid_test_types)
     return parser.parse_file(file_path)
 
 
@@ -412,19 +399,19 @@ if __name__ == "__main__":
     file_path = Path(sys.argv[1])
     try:
         cases = parse_test_cases(file_path)
-        print(f"✅ 解析成功，共 {len(cases)} 个用例\n")
+        print(f"解析成功，共 {len(cases)} 个用例\n")
         for i, case in enumerate(cases, 1):
             print(f"用例 {i}: [{case.priority}] {case.title}")
             print(f"  测试类型: {case.test_type}")
             print(f"  反向用例: {'是' if case.is_negative else '否'}")
             print(f"  步骤数: {len(case.steps)}")
             for j, (step, exp) in enumerate(zip(case.steps, case.expected), 1):
-                print(f"    {j}. {step} → {exp}")
+                print(f"    {j}. {step} -> {exp}")
             if case.precondition:
                 print(f"  前置条件: {case.precondition}")
             if case.note:
                 print(f"  备注: {case.note}")
             print()
     except ParseError as e:
-        print(f"❌ 解析失败: {e}")
+        print(f"解析失败: {e}")
         sys.exit(1)

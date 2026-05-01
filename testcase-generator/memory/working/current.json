@@ -1,0 +1,17 @@
+{
+  "current_session": {
+    "session_id": "",
+    "start_time": "",
+    "requirements": "",
+    "function_modules": [],
+    "test_points": [],
+    "test_cases": [],
+    "status": "in_progress"
+  },
+  "last_error": {
+    "timestamp": "",
+    "error_type": "",
+    "error_message": "",
+    "related_skill": ""
+  }
+}

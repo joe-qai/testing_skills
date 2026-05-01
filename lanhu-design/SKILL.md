@@ -1,7 +1,6 @@
 ---
 name: lanhu-design
-description: |
-  蓝湖设计稿与 Axure 原型分析。通过 lanhu MCP Server 直接读取蓝湖项目的原型页面、设计图、切图资源。
+description: 蓝湖设计稿与 Axure 原型分析。通过 lanhu MCP Server 直接读取蓝湖项目的原型页面、设计图、切图资源。
 
   触发场景：
   - 需要从蓝湖获取 Axure 原型页面进行需求分析

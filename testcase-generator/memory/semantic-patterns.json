@@ -1,0 +1,73 @@
+{
+  "patterns": {
+    "data_placeholder": {
+      "id": "pat-001",
+      "name": "数据占位符问题",
+      "source": "skill_creation",
+      "confidence": 0.98,
+      "applications": 0,
+      "created": "2026-04-09",
+      "category": "引导错误",
+      "problem": "测试用例中使用 {username}、{password} 等占位符，导致用例无法直接执行",
+      "solution": "使用具体值替代占位符，如 admin@example.com",
+      "quality_rules": [
+        "禁止使用 {xxx} 格式的占位符",
+        "测试数据必须具体可执行"
+      ],
+      "target_skills": ["testcase-generator"]
+    },
+    "expected_vague": {
+      "id": "pat-002",
+      "name": "预期结果模糊",
+      "source": "skill_creation",
+      "confidence": 0.98,
+      "applications": 0,
+      "created": "2026-04-09",
+      "category": "引导错误",
+      "problem": "预期结果使用'功能正常'、'显示正确'等模糊描述，无法验证",
+      "solution": "使用具体的UI变化或数据变化描述",
+      "quality_rules": [
+        "禁止使用'功能正常'等模糊描述",
+        "预期结果必须可验证"
+      ],
+      "target_skills": ["testcase-generator"]
+    },
+    "step_mismatch": {
+      "id": "pat-003",
+      "name": "步骤与预期不对应",
+      "source": "skill_creation",
+      "confidence": 0.98,
+      "applications": 0,
+      "created": "2026-04-09",
+      "category": "引导错误",
+      "problem": "测试步骤数与预期结果数不匹配，导致无法确定检查点",
+      "solution": "步骤与预期结果序号一一对应",
+      "quality_rules": [
+        "测试步骤序号与预期结果序号必须对应",
+        "无需检查的步骤在预期结果中填'-'"
+      ],
+      "target_skills": ["testcase-generator"]
+    },
+    "priority_imbalance": {
+      "id": "pat-004",
+      "name": "优先级分布失衡",
+      "source": "skill_creation",
+      "confidence": 0.95,
+      "applications": 0,
+      "created": "2026-04-09",
+      "category": "质量评估",
+      "problem": "P0+P1占比过高(>50%)，导致测试成本过高",
+      "solution": "将非核心流程降级为P2，UI展示类降级为P3",
+      "quality_rules": [
+        "P0+P1 <= 40%",
+        "P2应占最大比例"
+      ],
+      "target_skills": ["testcase-generator"]
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2026-04-09",
+    "total_patterns": 4
+  }
+}
