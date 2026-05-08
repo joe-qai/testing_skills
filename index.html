@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0F172A">
+    <meta name="theme-color" content="#0a0a0f">
     <title>QA-Skills - AI Agent 测试技能集合</title>
     <style>
         :root {
-            --primary-color: #3B82F6;
-            --primary-dark: #2563EB;
-            --primary-light: #60A5FA;
-            --secondary-color: #10B981;
-            --accent-color: #8B5CF6;
-            --background: #0F172A;
-            --surface: #1E293B;
-            --surface-light: #334155;
-            --text-primary: #F8FAFC;
-            --text-secondary: #94A3B8;
-            --border-color: #334155;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --background: #0a0a0f;
+            --surface: #12121a;
+            --surface-light: #1a1a24;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --border-color: #2a2a3a;
+            --glow-primary: 0 0 20px rgba(102, 126, 234, 0.4);
+            --glow-secondary: 0 0 30px rgba(240, 147, 251, 0.3);
         }
 
         * {
@@ -29,47 +28,97 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--background);
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(102, 126, 234, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 126, 234, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -200px;
+            left: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: glowPulse 8s ease-in-out infinite;
+        }
+
+        .bg-glow-secondary {
+            position: fixed;
+            bottom: -200px;
+            right: -200px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(240, 147, 251, 0.12) 0%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: glowPulse 6s ease-in-out infinite reverse;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 0.8; }
         }
 
         nav {
-            background: rgba(30, 41, 59, 0.9);
+            background: rgba(18, 18, 26, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--primary-light);
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
+            letter-spacing: -0.5px;
         }
 
         .logo svg {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
+            color: #667eea;
         }
 
         .nav-links {
@@ -83,41 +132,49 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem;
-            gap: 0.5rem;
+            background: rgba(18, 18, 26, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            gap: 0.25rem;
         }
 
         .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
+            padding: 0.875rem 1.25rem;
+            border-radius: 0.75rem;
             transition: all 0.3s ease;
         }
 
         .nav-links a:hover {
-            color: var(--primary-light);
-            background: var(--surface-light);
+            color: var(--text-primary);
+            background: rgba(102, 126, 234, 0.15);
+            box-shadow: var(--glow-primary);
         }
 
         .menu-toggle {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             cursor: pointer;
             border: none;
-            background: transparent;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: rgba(102, 126, 234, 0.2);
         }
 
         .menu-toggle span {
-            width: 24px;
+            width: 20px;
             height: 2px;
             background: var(--text-primary);
             border-radius: 1px;
@@ -125,7 +182,7 @@
         }
 
         .menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translateY(6px);
+            transform: rotate(45deg) translateY(7px);
         }
 
         .menu-toggle.active span:nth-child(2) {
@@ -133,81 +190,102 @@
         }
 
         .menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translateY(-6px);
+            transform: rotate(-45deg) translateY(-7px);
         }
 
         .hero {
-            padding: 7rem 1rem 4rem;
-            max-width: 800px;
+            padding: 9rem 1.5rem 5rem;
+            max-width: 900px;
             margin: 0 auto;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .hero h1 {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary-light), var(--accent-color));
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.25rem;
+            background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.3;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            text-shadow: var(--glow-primary);
         }
 
         .hero p {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 0.75rem;
+            gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 0.9rem 1.75rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            font-weight: 700;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            min-width: 140px;
+            gap: 0.625rem;
+            min-width: 150px;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            background: var(--primary-gradient);
             color: white;
-            box-shadow: var(--shadow);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4), var(--glow-primary);
         }
 
-        .btn-primary:hover,
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.5), var(--glow-primary);
+        }
+
         .btn-primary:active {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-1px);
         }
 
         .btn-secondary {
-            background: var(--surface);
+            background: var(--surface-light);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
         }
 
-        .btn-secondary:hover,
-        .btn-secondary:active {
-            background: var(--surface-light);
-            border-color: var(--primary-light);
+        .btn-secondary:hover {
+            background: var(--surface);
+            border-color: #667eea;
+            box-shadow: var(--glow-primary);
+            transform: translateY(-2px);
         }
 
         .btn svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
         }
 
         .stats {
@@ -216,129 +294,224 @@
             gap: 1rem;
             max-width: 400px;
             margin: 0 auto;
-            padding: 0 1rem 4rem;
+            padding: 0 1.5rem 5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .stat-card {
-            background: var(--surface);
-            border-radius: 0.75rem;
-            padding: 1.25rem;
+            background: linear-gradient(145deg, rgba(26, 26, 36, 0.8), rgba(18, 18, 26, 0.9));
+            border-radius: 1.25rem;
+            padding: 1.5rem;
             text-align: center;
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
         }
 
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover,
         .stat-card:active {
-            transform: scale(0.98);
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), var(--glow-primary);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
         }
 
         .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--primary-light);
-            margin-bottom: 0.25rem;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.375rem;
+            text-shadow: var(--glow-primary);
         }
 
         .stat-label {
             color: var(--text-secondary);
-            font-size: 0.825rem;
+            font-size: 0.875rem;
+            font-weight: 500;
         }
 
         .section {
-            padding: 4rem 1rem;
+            padding: 5rem 1.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.75rem;
+            font-weight: 800;
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
             color: var(--text-primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+            box-shadow: var(--glow-primary);
         }
 
         .skills-grid {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
         .skill-card {
-            background: var(--surface);
-            border-radius: 0.75rem;
-            padding: 1.25rem;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            background: linear-gradient(145deg, rgba(26, 26, 36, 0.6), rgba(18, 18, 26, 0.8));
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .skill-card:hover,
         .skill-card:active {
-            transform: scale(0.98);
-            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), var(--glow-primary);
+        }
+
+        .skill-card:hover::before {
+            left: 100%;
         }
 
         .skill-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            border-radius: 0.75rem;
+            width: 52px;
+            height: 52px;
+            background: var(--primary-gradient);
+            border-radius: 1.125rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 0.75rem;
-            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-card:hover .skill-icon {
+            transform: scale(1.1);
         }
 
         .skill-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.375rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
             color: var(--text-primary);
         }
 
         .skill-desc {
-            font-size: 0.825rem;
+            font-size: 0.875rem;
             color: var(--text-secondary);
-            line-height: 1.6;
+            line-height: 1.65;
         }
 
         .workflow {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
         .workflow-steps {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
         .workflow-step {
-            background: var(--surface);
-            border-radius: 0.75rem;
-            padding: 1.25rem;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            background: linear-gradient(145deg, rgba(26, 26, 36, 0.6), rgba(18, 18, 26, 0.8));
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
             display: flex;
-            gap: 1rem;
+            gap: 1.25rem;
+            position: relative;
+            overflow: hidden;
         }
 
+        .workflow-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 3px;
+            background: var(--primary-gradient);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .workflow-step:hover,
         .workflow-step:active {
-            border-color: var(--primary-color);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .workflow-step:hover::before {
+            transform: scaleY(1);
         }
 
         .step-number {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            width: 44px;
+            height: 44px;
+            background: var(--primary-gradient);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-weight: 700;
-            font-size: 1rem;
+            font-weight: 800;
+            font-size: 1.125rem;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .workflow-step:hover .step-number {
+            transform: scale(1.15);
         }
 
         .step-content {
@@ -346,78 +519,108 @@
         }
 
         .step-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.375rem;
             color: var(--text-primary);
         }
 
         .step-desc {
-            font-size: 0.825rem;
+            font-size: 0.875rem;
             color: var(--text-secondary);
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         footer {
-            background: var(--surface);
-            border-top: 1px solid var(--border-color);
-            padding: 2rem 1rem;
-            margin-top: 4rem;
+            background: linear-gradient(180deg, transparent, rgba(18, 18, 26, 0.9));
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 3rem 1.5rem;
+            margin-top: 5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-content {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
         }
 
         .footer-links {
             display: flex;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 2rem;
             justify-content: center;
         }
 
         .footer-links a {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: var(--primary-light);
+            color: var(--text-primary);
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
         }
 
         .footer-copyright {
-            text-align: center;
             color: var(--text-secondary);
-            font-size: 0.825rem;
+            font-size: 0.875rem;
+            opacity: 0.7;
         }
 
         @media (min-width: 640px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 3.5rem;
             }
 
             .hero p {
-                font-size: 1.1rem;
+                font-size: 1.25rem;
             }
 
             .stats {
                 grid-template-columns: repeat(4, 1fr);
-                max-width: 800px;
+                max-width: 900px;
             }
 
             .skills-grid {
                 grid-template-columns: repeat(2, 1fr);
-                max-width: 800px;
+                max-width: 900px;
             }
 
             .section-title {
-                font-size: 1.8rem;
+                font-size: 2.25rem;
             }
 
             .menu-toggle {
@@ -426,7 +629,7 @@
 
             .nav-links {
                 display: flex;
-                gap: 1.25rem;
+                gap: 0.5rem;
                 position: static;
                 background: transparent;
                 border: none;
@@ -434,45 +637,53 @@
             }
 
             .nav-links a {
-                padding: 0.5rem 0;
-            }
-
-            .nav-links a:hover {
-                background: transparent;
+                padding: 0.625rem 1.25rem;
             }
         }
 
         @media (min-width: 1024px) {
             .hero h1 {
-                font-size: 3rem;
+                font-size: 4.5rem;
             }
 
             .stats {
-                max-width: 1000px;
+                max-width: 1100px;
             }
 
             .skills-grid {
                 grid-template-columns: repeat(3, 1fr);
-                max-width: 1000px;
+                max-width: 1200px;
             }
 
             .workflow-steps {
                 flex-direction: row;
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: 1.5rem;
             }
 
             .workflow-step {
-                width: calc(33.333% - 0.666rem);
+                width: calc(33.333% - 1rem);
                 flex-direction: column;
                 text-align: center;
+                padding: 2rem;
+            }
+
+            .workflow-step::before {
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: auto;
+                height: 3px;
+                width: 100%;
+                transform: scaleX(0);
             }
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -480,22 +691,49 @@
             }
         }
 
-        .hero h1, .hero p, .hero-buttons {
-            animation: fadeInUp 0.6s ease-out;
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero h1 {
+            animation: fadeInUp 0.8s ease-out;
         }
 
         .hero p {
-            animation-delay: 0.1s;
-            animation-fill-mode: both;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
         }
 
         .hero-buttons {
-            animation-delay: 0.2s;
-            animation-fill-mode: both;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
         }
+
+        .stat-card {
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .skill-card {
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .skill-card:nth-child(1) { animation-delay: 0.1s; }
+        .skill-card:nth-child(2) { animation-delay: 0.15s; }
+        .skill-card:nth-child(3) { animation-delay: 0.2s; }
+        .skill-card:nth-child(4) { animation-delay: 0.25s; }
+        .skill-card:nth-child(5) { animation-delay: 0.3s; }
+        .skill-card:nth-child(6) { animation-delay: 0.35s; }
     </style>
 </head>
 <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-secondary"></div>
+
     <nav>
         <div class="nav-container">
             <div class="logo">
@@ -511,14 +749,14 @@
                 <span></span>
             </div>
             <div class="nav-links" id="navLinks">
-                <a href="https://github.com/joe-qai/testing_skills" target="_blank">GitHub</a>
+                <a href="https://github.com/joe-qai/qa-skills" target="_blank">GitHub</a>
             </div>
         </div>
     </nav>
 
     <section class="hero">
         <h1>QA-Skills</h1>
-        <p>AI Agent 驱动的软件测试技能集合，覆盖测试全生命周期</p>
+        <p>AI Agent 驱动的软件测试技能集合，覆盖测试全生命周期，让测试更智能、更高效</p>
         <div class="hero-buttons">
             <a href="#skills" class="btn btn-primary">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -528,7 +766,7 @@
                 </svg>
                 浏览技能
             </a>
-            <a href="https://github.com/joe-qai/testing_skills" class="btn btn-secondary" target="_blank">
+            <a href="https://github.com/joe-qai/qa-skills" class="btn btn-secondary" target="_blank">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                     <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.272.098-2.647 0 0 .84-.268 2.75 1.026A9.578 9.578 0 0112 6.844c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.026 2.747-1.026.546 1.375.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.482A10.02 10.02 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
                 </svg>
@@ -637,8 +875,9 @@
 
     <footer>
         <div class="footer-content">
+            <div class="footer-logo">QA-Skills</div>
             <div class="footer-links">
-                <a href="https://github.com/joe-qai/testing_skills">GitHub</a>
+                <a href="https://github.com/joe-qai/qa-skills" target="_blank">GitHub</a>
             </div>
             <div class="footer-copyright">
                 © 2026 QA-Skills. All rights reserved.
