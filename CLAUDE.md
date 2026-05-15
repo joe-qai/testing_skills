@@ -4,9 +4,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an **AI Agent Testing Skills Collection** (测试技能集合) for iFlow CLI, containing 11 specialized skills that automate the software testing lifecycle—from requirements analysis to test execution.
+This is an **AI Agent Testing Skills Collection** (测试技能集合) for iFlow CLI, containing 19 specialized skills that automate the software testing lifecycle—from requirements analysis to test execution.
 
 **Key Documentation**: [AGENTS.md](AGENTS.md) contains complete skill descriptions, workflows, and usage examples.
+
+## Skill Inventory (19 Skills)
+
+| Skill | Purpose | Key Scripts/Resources |
+|-------|---------|----------------------|
+| `requirements-analyzer` | Extract requirements from Excel/PDF/PNG/Word/TXT | references/ |
+| `requirements-analysis` | Conversational requirements, EPIC decomposition | references/ |
+| `analyze-requirements` | Full requirements orchestration (Agent dispatch) | — |
+| `testcase-planner` | Test planning (ITEM/POINT hierarchy) | parse_plan.py |
+| `testcase-generator` | Generate test cases (Markdown/Excel/XMind) | validate.py, to_excel.py, testcase_to_xmind.py |
+| `doc-based-testcase-generator` | Generate cases from PRD/interface docs | — |
+| `test-effort-estimator` | Test effort estimation + Excel report | generate_excel.py |
+| `webapp-testing` | Playwright-based web testing | with_server.py |
+| `agent-browser` | Browser automation CLI | npx agent-browser |
+| `lanhu-design` | Lanhu/Axure prototype analysis | MCP Server |
+| `skill-creator` | Create and evaluate skills | run_eval.py, aggregate_benchmark.py |
+| `ui-ux-pro-max` | UI/UX design intelligence | 50+ styles, 161 palettes |
+| `theme-factory` | Apply themes to slides/docs | 10 preset themes |
+| `doc-coauthoring` | Documentation collaboration | — |
+| `huashu-nuwa` | Distill thinking frameworks into Skills | examples/ |
+| `prompt-engineer` | Prompt engineering and optimization | references/ |
+| `xlsx` | Excel processing | recalc.py |
+| `pdf` | PDF processing | pypdf, pdfplumber |
+| `pptx` | PPT processing | thumbnail.py, markitdown |
 
 ## Common Development Commands
 
@@ -14,7 +38,7 @@ This is an **AI Agent Testing Skills Collection** (测试技能集合) for iFlow
 
 ```bash
 # Install dependencies
-pip install pandas openpyxl python-docx playwright
+pip install pandas openpyxl python-docx playwright pypdf pdfplumber
 
 # Install Playwright browsers
 playwright install chromium
@@ -55,6 +79,15 @@ python webapp-testing/scripts/with_server.py \
   -- python your_test.py
 ```
 
+### Browser Automation
+
+```bash
+agent-browser open https://example.com
+agent-browser snapshot -i
+agent-browser click @e1
+agent-browser fill @e2 "text"
+```
+
 ### Skill Evaluation (skill-creator)
 
 ```bash
@@ -71,6 +104,19 @@ python skill-creator/eval-viewer/generate_review.py <workspace>/iteration-N --sk
 python -m skill-creator.scripts.package_skill <path/to/skill-folder>
 ```
 
+### Excel Processing
+
+```bash
+python xlsx/scripts/recalc.py file.xlsx
+```
+
+### PPT Processing
+
+```bash
+python -m markitdown presentation.pptx
+python pptx/scripts/thumbnail.py presentation.pptx
+```
+
 ## High-Level Architecture
 
 ### Skill Organization
@@ -84,7 +130,8 @@ skill-name/
 ├── scripts/              # Optional: Executable Python scripts
 ├── templates/            # Optional: Template files
 ├── assets/               # Optional: Resources (icons, fonts)
-└── examples/             # Optional: Example code
+├── examples/             # Optional: Example code
+└── LICENSE.txt          # Optional: License file
 ```
 
 **SKILL.md Frontmatter**:
@@ -107,27 +154,35 @@ Skills use progressive disclosure to manage context:
 ### Key Skills and Their Roles
 
 | Skill | Purpose | Key Scripts |
-|-------|---------|-------------|
+|-------|---------|------------|
 | `testcase-generator` | Generate structured test cases from test points | `validate.py`, `to_excel.py`, `testcase_to_xmind.py` |
 | `testcase-planner` | Create test plans (ITEM → POINT hierarchy) | `parse_plan.py` |
-| `requirements-analyzer` | Extract requirements from Excel/PDF/PNG/Word | - |
-| `analyze-requirements` | Orchestrate full requirements analysis workflow | - |
+| `requirements-analyzer` | Extract requirements from Excel/PDF/PNG/Word | — |
+| `analyze-requirements` | Orchestrate full requirements analysis workflow | — |
 | `agent-browser` | Browser automation via CLI | Uses `npx agent-browser` |
 | `webapp-testing` | Playwright-based web app testing | `with_server.py` |
 | `skill-creator` | Create and evaluate new skills | `run_eval.py`, `aggregate_benchmark.py` |
 | `test-effort-estimator` | Estimate testing effort | `generate_excel.py` |
 | `lanhu-design` | Analyze Lanhu/Axure prototypes | Uses lanhu MCP Server |
+| `ui-ux-pro-max` | UI/UX design intelligence | 50+ styles, 161 palettes |
+| `theme-factory` | Theme application for slides/docs | 10 preset themes |
+| `doc-coauthoring` | Documentation collaboration | — |
+| `huashu-nuwa` | Distill thinking frameworks | examples/ |
+| `prompt-engineer` | Prompt optimization | references/ |
+| `xlsx` | Excel operations | recalc.py |
+| `pdf` | PDF operations | pypdf |
+| `pptx` | PPT operations | thumbnail.py |
 
 ### Test Case Format (Text Protocol v0.2)
 
 Test cases follow a strict Markdown format:
 
 ```markdown
-## [P0] 用例标题描述
-[测试类型] 功能
-[前置条件] 用户已登录；账号未锁定
-[测试步骤] 1. 打开登录页面。2. 输入用户名test_user。3. 点击登录按钮。
-[预期结果] 1. 页面跳转到首页。2. 显示用户信息。
+## [P0] Test case title
+[Test type] Function
+[Precondition] User logged in
+[Steps] 1. Open page. 2. Click button.
+[Expected] 1. Show success message.
 ```
 
 **Priority**: P0 (core positive), P1 (basic positive), P2 (core exception), P3 (boundary/low frequency)
@@ -145,6 +200,26 @@ analyze-requirements/                              scripts/validate.py
                                                    scripts/testcase_to_xmind.py
 ```
 
+### Complete Skill Categories
+
+**Testing Skills (Core)**:
+- requirements-analyzer, requirements-analysis, analyze-requirements
+- testcase-planner, testcase-generator, doc-based-testcase-generator
+- test-effort-estimator, webapp-testing
+
+**Design & Documentation Skills**:
+- lanhu-design, ui-ux-pro-max, theme-factory
+- doc-coauthoring, prompt-engineer
+
+**Platform & Engineering Skills**:
+- agent-browser, skill-creator
+
+**File Processing Skills**:
+- xlsx, pdf, pptx
+
+**Advanced Skills**:
+- huashu-nuwa (人物思维蒸馏)
+
 ## Working with Scripts
 
 **Important**: Scripts in `scripts/` directories are designed to be used as black-box utilities. Always run with `--help` first rather than reading the source:
@@ -158,8 +233,9 @@ This keeps the context window clean—these scripts handle complex workflows rel
 ## Dependencies
 
 - **Python**: 3.10+
-- **Core Libraries**: pandas (Excel), openpyxl (Excel I/O), python-docx (Word), playwright (browser automation)
+- **Core Libraries**: pandas (Excel), openpyxl (Excel I/O), python-docx (Word), playwright (browser automation), pypdf (PDF), pdfplumber (PDF tables)
 - **Browser**: Chromium (via Playwright)
+- **CLI Tools**: agent-browser (Node.js)
 
 ## Environment Variables
 

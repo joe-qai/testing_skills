@@ -2,9 +2,35 @@
 
 ## Project Overview
 
-AI Agent Testing Skills Collection for iFlow CLI. 11 skills for software testing lifecycle.
+AI Agent Testing Skills Collection for iFlow CLI. 19 skills for software testing lifecycle.
 
-**Tech Stack**: Python 3.10+, Playwright, pandas, openpyxl, python-docx
+**Tech Stack**: Python 3.10+, Playwright, pandas, openpyxl, python-docx, pypdf
+
+---
+
+## Skill Inventory (19 Skills)
+
+| Skill | Purpose | Commands/Resources |
+|-------|---------|-------------------|
+| `requirements-analyzer` | Extract requirements from Excel/PDF/PNG/Word/TXT | references/ |
+| `requirements-analysis` | Conversational requirements, EPIC decomposition | references/ |
+| `analyze-requirements` | Full requirements orchestration (Agent dispatch) | — |
+| `testcase-planner` | Test planning (ITEM/POINT hierarchy) | parse_plan.py |
+| `testcase-generator` | Generate test cases (Markdown/Excel/XMind) | validate.py, to_excel.py |
+| `doc-based-testcase-generator` | Generate cases from PRD/interface docs | — |
+| `test-effort-estimator` | Test effort estimation + Excel report | generate_excel.py |
+| `webapp-testing` | Playwright-based web testing | with_server.py |
+| `agent-browser` | Browser automation CLI | npx agent-browser |
+| `lanhu-design` | Lanhu/Axure prototype analysis | MCP Server |
+| `skill-creator` | Create and evaluate skills | run_eval.py, quick_validate.py |
+| `ui-ux-pro-max` | UI/UX design intelligence | 50+ styles, 161 palettes |
+| `theme-factory` | Apply themes to slides/docs | 10 preset themes |
+| `doc-coauthoring` | Documentation collaboration | — |
+| `huashu-nuwa` | Distill thinking frameworks into Skills | examples/ |
+| `prompt-engineer` | Prompt engineering and optimization | references/ |
+| `xlsx` | Excel processing | recalc.py |
+| `pdf` | PDF processing | pypdf, pdfplumber |
+| `pptx` | PPT processing | thumbnail.py, markitdown |
 
 ---
 
@@ -12,7 +38,7 @@ AI Agent Testing Skills Collection for iFlow CLI. 11 skills for software testing
 
 ### Setup
 ```bash
-pip install pandas openpyxl python-docx playwright
+pip install pandas openpyxl python-docx playwright pypdf pdfplumber
 playwright install chromium
 ```
 
@@ -49,6 +75,25 @@ python skill-creator/scripts/quick_validate.py
 ### Web Testing
 ```bash
 python webapp-testing/scripts/with_server.py --server "npm run dev" --port 5173 -- python test.py
+```
+
+### Browser Automation
+```bash
+agent-browser open https://example.com
+agent-browser snapshot -i
+agent-browser click @e1
+agent-browser fill @e2 "text"
+```
+
+### Excel Processing
+```bash
+python xlsx/scripts/recalc.py file.xlsx
+```
+
+### PPT Processing
+```bash
+python -m markitdown presentation.pptx
+python pptx/scripts/thumbnail.py presentation.pptx
 ```
 
 ---
@@ -130,43 +175,61 @@ description: When to trigger and what it does
 ```
 skill-name/
 ├── SKILL.md           # Required: definition + YAML frontmatter
-├── references/       # Optional: documentation
+├── references/        # Optional: documentation
 ├── scripts/           # Optional: Python utilities
 ├── templates/         # Optional: templates
 ├── assets/            # Optional: resources
-└── examples/         # Optional: examples
+├── examples/          # Optional: examples
+└── LICENSE.txt        # Optional: license file
 ```
 
 ---
 
-## Key Skills
-
-| Skill | Purpose | Commands |
-|-------|---------|----------|
-| `testcase-generator` | Generate test cases | validate.py, to_excel.py |
-| `testcase-planner` | Create test plans | parse_plan.py |
-| `requirements-analyzer` | Extract from Excel/PDF/PNG | - |
-| `analyze-requirements` | Orchestrate requirements | - |
-| `agent-browser` | Browser automation | npx agent-browser |
-| `webapp-testing` | Playwright testing | with_server.py |
-| `skill-creator` | Create/evaluate skills | run_eval.py |
-| `test-effort-estimator` | Estimate effort | generate_excel.py |
-| `lanhu-design` | Lanhu/Axure prototypes | MCP Server |
-
----
-
-## Environment Variables
-
-- `LANHU_COOKIE`: Blue Lake auth (`.claude/settings.json`)
-- `AGENT_BROWSER_*`: Browser automation settings
-
----
-
-## Workflow
+## Complete Workflow
 
 ```
 Requirements → Test Planning → Case Gen → Execution
 (requirements-analyzer) (testcase-planner) (testcase-generator) (webapp-testing)
 ```
 
-**Last Updated**: 2026-03-25
+### Testing Skills (Core)
+
+```
+requirements-analyzer/      testcase-planner/      testcase-generator/
+analyze-requirements/       └── parse_plan.py      ├── validate.py
+                                                      to_excel.py
+                                                      testcase_to_xmind.py
+```
+
+### Design & Documentation Skills
+
+```
+lanhu-design/               ui-ux-pro-max/         doc-coauthoring/
+MCP Server                  50+ styles             PRD/提案/设计文档
+                             161 palettes
+
+theme-factory/              pptx/                  pdf/
+10 preset themes            thumbnail.py            pypdf
+                              markitdown
+```
+
+### Platform & Engineering Skills
+
+```
+agent-browser/              webapp-testing/         skill-creator/
+npx agent-browser           with_server.py          run_eval.py
+                                                      quick_validate.py
+```
+
+---
+
+## Environment Variables
+
+- `LANHU_COOKIE`: Blue Lake auth (`.claude/settings.json`)
+- `AGENT_BROWSER_ENCRYPTION_KEY`: Auth vault encryption key
+- `AGENT_BROWSER_HEADED`: Enable visual browser mode
+- `AGENT_BROWSER_DEFAULT_TIMEOUT`: Default timeout
+
+---
+
+**Last Updated**: 2026-05-15
