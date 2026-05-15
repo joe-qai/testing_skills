@@ -1037,11 +1037,9 @@
         skillsExpandBtn.addEventListener('click', () => {
             isExpanded = !isExpanded;
             
-            hiddenSkills.forEach((skill, index) => {
+            hiddenSkills.forEach((skill) => {
                 if (isExpanded) {
-                    setTimeout(() => {
-                        skill.classList.add('visible');
-                    }, index * 100);
+                    skill.classList.add('visible');
                 } else {
                     skill.classList.remove('visible');
                 }
