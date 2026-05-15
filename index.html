@@ -502,6 +502,55 @@
             line-height: 1.65;
         }
 
+        .hidden-skill {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hidden-skill.visible {
+            display: block;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .skills-expand-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .skills-expand-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.35s ease;
+        }
+
+        .skills-expand-btn:hover {
+            border-color: #667eea;
+            color: var(--text-primary);
+            background: rgba(102, 126, 234, 0.1);
+            box-shadow: var(--glow-primary);
+        }
+
+        .skills-expand-btn svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.35s ease;
+        }
+
+        .skills-expand-btn.expanded svg {
+            transform: rotate(180deg);
+        }
+
         .workflow {
             max-width: 700px;
             margin: 0 auto;
@@ -910,41 +959,49 @@
                 <h3 class="skill-title">文档协作</h3>
                 <p class="skill-desc">结构化文档协作工作流，支持 PRD、技术文档、提案撰写。</p>
             </div>
-            <div class="skill-card">
+            <div class="skill-card hidden-skill">
                 <div class="skill-icon">🌐</div>
                 <h3 class="skill-title">浏览器自动化</h3>
                 <p class="skill-desc">CLI 驱动的浏览器自动化，支持页面导航、表单填写、截图等操作。</p>
             </div>
-            <div class="skill-card">
+            <div class="skill-card hidden-skill">
                 <div class="skill-icon">⚙️</div>
                 <h3 class="skill-title">技能创建器</h3>
                 <p class="skill-desc">创建和评估自定义技能包，支持批量测试和性能评估。</p>
             </div>
-            <div class="skill-card">
+            <div class="skill-card hidden-skill">
                 <div class="skill-icon">🧠</div>
                 <h3 class="skill-title">女娲造人</h3>
                 <p class="skill-desc">将人物思维框架蒸馏为可运行的技能，支持决策分析和顾问视角。</p>
             </div>
-            <div class="skill-card">
+            <div class="skill-card hidden-skill">
                 <div class="skill-icon">🎯</div>
                 <h3 class="skill-title">Prompt 工程</h3>
                 <p class="skill-desc">提示词设计、优化和评估，提升 AI 交互效果和输出质量。</p>
             </div>
-            <div class="skill-card">
+            <div class="skill-card hidden-skill">
                 <div class="skill-icon">📈</div>
                 <h3 class="skill-title">Excel 处理</h3>
                 <p class="skill-desc">支持 Excel 文件处理、公式重算、数据提取和格式转换。</p>
             </div>
-            <div class="skill-card">
+            <div class="skill-card hidden-skill">
                 <div class="skill-icon">📄</div>
                 <h3 class="skill-title">PDF 处理</h3>
                 <p class="skill-desc">PDF 文本提取、表格识别、文档合并和格式转换。</p>
             </div>
-            <div class="skill-card">
+            <div class="skill-card hidden-skill">
                 <div class="skill-icon">📊</div>
                 <h3 class="skill-title">PPT 处理</h3>
                 <p class="skill-desc">PPT 文档处理、缩略图生成、内容提取和格式转换。</p>
             </div>
+        </div>
+        <div class="skills-expand-container">
+            <button class="skills-expand-btn" id="skillsExpandBtn">
+                <span class="expand-text">展开更多</span>
+                <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
         </div>
     </section>
 
@@ -970,6 +1027,28 @@
                 menuToggle.classList.remove('active');
                 navLinks.classList.remove('active');
             }
+        });
+
+        const skillsExpandBtn = document.getElementById('skillsExpandBtn');
+        const hiddenSkills = document.querySelectorAll('.hidden-skill');
+        const expandText = document.querySelector('.expand-text');
+        let isExpanded = false;
+
+        skillsExpandBtn.addEventListener('click', () => {
+            isExpanded = !isExpanded;
+            
+            hiddenSkills.forEach((skill, index) => {
+                if (isExpanded) {
+                    setTimeout(() => {
+                        skill.classList.add('visible');
+                    }, index * 100);
+                } else {
+                    skill.classList.remove('visible');
+                }
+            });
+
+            skillsExpandBtn.classList.toggle('expanded');
+            expandText.textContent = isExpanded ? '收起' : '展开更多';
         });
     </script>
 </body>
